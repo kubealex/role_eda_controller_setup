@@ -1,0 +1,13 @@
+---
+# tasks file for role_eda_controller_setup
+- name: EDA Controller | Import project configuration tasks
+  ansible.builtin.import_tasks:
+    file: eda_configure_project.yml
+
+- name: EDA Controller | Import decision environment configuration tasks
+  ansible.builtin.import_tasks:
+    file: eda_configure_decision_env.yml
+
+- name: EDA Controller | Import activation configuration tasks
+  ansible.builtin.import_tasks:
+    file: eda_configure_activations.yml

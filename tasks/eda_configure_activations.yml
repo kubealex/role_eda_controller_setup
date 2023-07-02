@@ -1,0 +1,34 @@
+- name: EDA Controller | Retrieve rulebooks for given project
+  ansible.builtin.uri:
+    url: "{{ eda_controller_url }}/api/eda/v1/rulebooks/?project_id={{ eda_project_id }}"
+    force_basic_auth: true
+    url_username: "{{ eda_controller_user }}"
+    url_password: "{{ eda_controller_password }}"
+    method: GET
+    validate_certs: false
+    status_code:
+      - 200
+      - 201
+  register: rulebooks
+
+- name: EDA Controller | Build rulebook id/rulebook association for activations
+  ansible.builtin.set_fact:
+    rulebook_list: "{{ rulebook_list | default([]) + [{'name': item.name, 'id': rulebooks | community.general.json_query(rulebook_query) | join('') | int}] }}"
+  vars:
+    rulebook_query: "json.results[?name=='{{ item.rulebook }}'].id"
+  loop: "{{ eda_activations }}"
+
+- name: EDA Controller | Create activations for given project
+  ansible.builtin.uri:
+    url: "{{ eda_controller_url }}/api/eda/v1/activations/"
+    force_basic_auth: true
+    url_username: "{{ eda_controller_user }}"
+    url_password: "{{ eda_controller_password }}"
+    method: POST
+    body: {"restart_policy":"{{ restart_policy | default('always', true) }}","is_enabled":"{{ enabled | default(true, true) | bool }}","name":"{{ item.name }}","project_id":"{{ eda_project_id | int }}","decision_environment_id":"{{ eda_denv_id | int }}","rulebook_id":"{{ item.id | int }}"}
+    body_format: json
+    validate_certs: false
+    status_code:
+      - 200
+      - 201
+  loop: "{{ rulebook_list }}"

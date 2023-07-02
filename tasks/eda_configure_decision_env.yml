@@ -1,0 +1,31 @@
+- name: EDA Controller | Decision environment check
+  ansible.builtin.uri:
+    url: "{{ eda_controller_url }}/api/eda/v1/decision-environments/?name={{ eda_decision_env.name | replace(' ', '+') }}"
+    force_basic_auth: true
+    url_username: "{{ eda_controller_user }}"
+    url_password: "{{ eda_controller_password }}"
+    method: GET
+    validate_certs: false
+    status_code:
+      - 200
+      - 201
+  register: _denv_check
+
+- name: EDA Controller | Decision environment creation
+  ansible.builtin.uri:
+    url: "{{ eda_controller_url }}/api/eda/v1/decision-environments/{{ _denv_check.json.results[0].id | string + '/' if _denv_check.json.results | length > 0 else '' }}"
+    force_basic_auth: true
+    url_username: "{{ eda_controller_user }}"
+    url_password: "{{ eda_controller_password }}"
+    method: "{{ 'PATCH' if _denv_check.json.results | length > 0 else 'POST' }}"
+    body: '{"name":"{{ eda_decision_env.name }}","image_url":"{{ eda_decision_env.image_url }}"}'
+    body_format: json
+    validate_certs: false
+    status_code:
+      - 200
+      - 201
+  register: _denv_create
+
+- name: EDA Controller | Save decision environment id
+  ansible.builtin.set_fact:
+    eda_denv_id: "{{ _denv_create.json.id }}"
