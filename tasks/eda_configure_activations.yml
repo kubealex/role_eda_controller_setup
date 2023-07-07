@@ -44,7 +44,7 @@
 
 - name: Merge lists
   ansible.builtin.set_fact:
-    final_list: "{{ rulebook_list | union(ex) }}"
+    final_list: "{{ rulebook_list | union(extra_vars_list) }}"
 
 - name: Print
   ansible.builtin.debug:
