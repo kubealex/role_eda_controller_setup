@@ -9,14 +9,42 @@
     status_code:
       - 200
       - 201
-  register: rulebooks
+  register: _rulebooks
 
 - name: EDA Controller | Build rulebook id/rulebook association for activations
   ansible.builtin.set_fact:
-    rulebook_list: "{{ rulebook_list | default([]) + [{'name': item.name, 'id': rulebooks | community.general.json_query(rulebook_query) | join('') | int}] }}"
+    rulebook_list: "{{ rulebook_list | default([]) + [{'name': item.name, 'id': _rulebooks | community.general.json_query(rulebook_query) | join('') | int}] }}"
   vars:
     rulebook_query: "json.results[?name=='{{ item.rulebook }}'].id"
   loop: "{{ eda_activations }}"
+
+- name: EDA Controller | Create activations for given project
+  ansible.builtin.uri:
+    url: "{{ eda_controller_url }}/api/eda/v1/extra-vars/"
+    force_basic_auth: true
+    url_username: "{{ eda_controller_user }}"
+    url_password: "{{ eda_controller_password }}"
+    method: POST
+    body: {"extra_var":"{{ vars | default(null, true) }}"}
+    body_format: json
+    validate_certs: false
+    status_code:
+      - 200
+      - 201
+  loop: "{{ eda_activations }}"
+  register: _extra_vars
+
+- name: EDA Controller | Build rulebook id/rulebook association for activations
+  ansible.builtin.set_fact:
+    activation_list: "{{ activation_list | default([]) + [{'name': item.0.item.name, 'id': item.0.item.id, 'var_id': item.1.id}] }}"
+  loop:
+    - "{{ rulebook_list }}"
+    - "{{ _extra_vars.results }}"
+  when: item.0.name == item.1.name
+
+- name: Debug
+  ansible.builtin.debug:
+    var: activation_list
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
