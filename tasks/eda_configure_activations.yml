@@ -1,8 +1,8 @@
 - name: EDA Controller | Retrieve rulebooks for given project
   eda_activations:
     controller_url: "{{ eda_controller_url }}"
-    project_id: 2
+    project_name: "EDA Demo Project"
     controller_user: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
-    denv_id: 2
+    decision_env: "kubealex-eda"
     activations: "{{ eda_activations }}"
