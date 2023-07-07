@@ -5,35 +5,35 @@ import requests
 
 def create_activations(module):
     # Extract input parameters from the module object
-    eda_controller_url = module.params['eda_controller_url']
-    eda_project_id = module.params['eda_project_id']
-    eda_controller_user = module.params['eda_controller_user']
-    eda_controller_password = module.params['eda_controller_password']
+    controller_url = module.params['controller_url']
+    project_id = module.params['project_id']
+    controller_user = module.params['controller_user']
+    controller_password = module.params['controller_password']
     restart_policy = module.params['restart_policy']
     enabled = module.params['enabled']
-    eda_denv_id = module.params['eda_denv_id']
-    eda_activations = module.params['eda_activations']
+    denv_id = module.params['denv_id']
+    activations = module.params['activations']
 
     rulebook_list = []
     extra_vars_list = []
 
     # Retrieve rulebooks
-    url = f"{eda_controller_url}/api/eda/v1/rulebooks/?project_id={eda_project_id}"
-    response = requests.get(url, auth=(eda_controller_user, eda_controller_password), verify=False)
+    url = f"{controller_url}/api/eda/v1/rulebooks/?project_id={project_id}"
+    response = requests.get(url, auth=(controller_user, controller_password), verify=False)
     if response.status_code in (200, 201):
         rulebooks = response.json().get('results', [])
-        for activation in eda_activations:
+        for activation in activations:
             for rulebook in rulebooks:
                 if rulebook['name'] == activation['rulebook']:
                     rulebook_list.append({'name': activation['name'], 'id': int(rulebook['id'])})
                     break
 
     # Create extra vars for activations
-    for activation in eda_activations:
+    for activation in activations:
         if 'extra_vars' in activation and activation['extra_vars']:
-            url = f"{eda_controller_url}/api/eda/v1/extra-vars/"
+            url = f"{controller_url}/api/eda/v1/extra-vars/"
             body = {"extra_var": activation['extra_vars']}
-            response = requests.post(url, auth=(eda_controller_user, eda_controller_password),
+            response = requests.post(url, auth=(controller_user, controller_password),
                                      json=body, verify=False)
             if response.status_code in (200, 201):
                 extra_vars_list.append({'name': activation['name'], 'var_id': int(response.json().get('id'))})
@@ -43,8 +43,8 @@ def create_activations(module):
     for rulebook in rulebook_list:
         activation = {
             'name': rulebook['name'],
-            'project_id': int(eda_project_id),
-            'decision_environment_id': int(eda_denv_id),
+            'project_id': int(project_id),
+            'decision_environment_id': int(denv_id),
             'rulebook_id': rulebook['id'],
             'restart_policy': restart_policy,
             'is_enabled': enabled
@@ -56,7 +56,7 @@ def create_activations(module):
         activations_list.append(activation)
 
     # Create activations for given project
-    url = f"{eda_controller_url}/api/eda/v1/activations/"
+    url = f"{controller_url}/api/eda/v1/activations/"
     response_list = []
     for activation in activations_list:
         body = {
@@ -70,7 +70,7 @@ def create_activations(module):
         if 'extra_var_id' in activation:
             body['extra_var_id'] = activation['extra_var_id']
         headers = {'Content-Type': 'application/json'}
-        response = requests.post(url, auth=(eda_controller_user, eda_controller_password),
+        response = requests.post(url, auth=(controller_user, controller_password),
                                  json=body, headers=headers, verify=False)
         if response.status_code in (200, 201):
             response_list.append(response.json())
@@ -80,14 +80,14 @@ def create_activations(module):
 
 def main():
     module_args = dict(
-        eda_controller_url=dict(type='str', required=True),
-        eda_project_id=dict(type='str', required=True),
-        eda_controller_user=dict(type='str', required=True),
-        eda_controller_password=dict(type='str', required=True, no_log=True),
+        controller_url=dict(type='str', required=True),
+        project_id=dict(type='str', required=True),
+        controller_user=dict(type='str', required=True),
+        controller_password=dict(type='str', required=True, no_log=True),
         restart_policy=dict(type='str', default='always'),
         enabled=dict(type='bool', default=True),
-        eda_denv_id=dict(type='str', required=True),
-        eda_activations=dict(type='list', required=True),
+        denv_id=dict(type='str', required=True),
+        activations=dict(type='list', required=True),
     )
 
     module = AnsibleModule(
