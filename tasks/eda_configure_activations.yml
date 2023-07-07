@@ -54,7 +54,7 @@
     url_username: "{{ eda_controller_user }}"
     url_password: "{{ eda_controller_password }}"
     method: POST
-    body: {"restart_policy":"{{ restart_policy | default('always', true) }}","is_enabled":"{{ enabled | default(true, true) | bool }}","name":"{{ item.name }}","project_id":"{{ eda_project_id | int }}","decision_environment_id":"{{ eda_denv_id | int }}","rulebook_id":"{{ item.id | int }}", "extra_var_id": "{{ item.var_id | default(None, true) }}"}
+    body: {"restart_policy":"{{ restart_policy | default('always', true) }}","is_enabled":"{{ enabled | default(true, true) | bool }}","name":"{{ item.name }}","project_id":"{{ eda_project_id | int }}","decision_environment_id":"{{ eda_denv_id | int }}","rulebook_id":"{{ item.id | int }}{{ ', \"extra_var_id\": ' + item.var_id if item.var_id is defined else '' }} }
     body_format: json
     validate_certs: false
     status_code:
