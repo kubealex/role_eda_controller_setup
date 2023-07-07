@@ -57,9 +57,19 @@
       {{
         activations_list | default([])
         + [temp_dict[item.name] | combine({'var_id': item.var_id})]
+        if item.name in temp_dict else item
       }}
   loop: "{{ extra_vars_list }}"
-  when: item.name in temp_dict
+
+- name: Add remaining rulebook_list entries
+  ansible.builtin.set_fact:
+    activations_list: >-
+      {{
+        activations_list | default([])
+        + [item]
+      }}
+  loop: "{{ rulebook_list }}"
+  when: item.name not in temp_dict
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
