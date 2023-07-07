@@ -28,7 +28,7 @@ def create_decision_environment(module):
         denv_id = response.json().get('results', [{}])[0].get('id') if denv_exists else None
 
         # Create or update the decision environment
-        url = f"{controller_url}/api/eda/v1/decision-environments/{denv_id + '/' if denv_id else ''}"
+        url = f"{controller_url}/api/eda/v1/decision-environments/{str(denv_id) + '/' if denv_id else ''}"
         body = {
             'name': decision_environment_name,
             'image_url': decision_environment_image_url
