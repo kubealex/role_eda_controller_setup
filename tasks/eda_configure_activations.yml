@@ -61,7 +61,7 @@
       - 200
       - 201
   loop: "{{ rulebook_list }}"
-  when: not _extra_vars.skipped
+  when: item.var_id is defined
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
@@ -77,4 +77,4 @@
       - 200
       - 201
   loop: "{{ rulebook_list }}"
-  when: _extra_vars.skipped
+  when: item.var_id is not defined
