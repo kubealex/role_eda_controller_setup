@@ -41,10 +41,15 @@
 
 - name: EDA Controller | Build rulebook id/rulebook association for activations
   ansible.builtin.set_fact:
-    rulebook_list: "{{ rulebook_list | map('ternary', item.name == results_item.name, item | combine({'results_id': results_item.id}), item) }}"
-  loop: "{{ _extra_vars.results }}"
-  loop_control:
-    loop_var: results_item
+    rulebook_list: >-
+      {{
+        rulebook_list | map('combine', { 'var_id': results_item.id })
+        if results_item.item.name == item.name else item
+      }}
+  loop: "{{ rulebook_list }}"
+  vars:
+    results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
+
 
 - name: Debug
   ansible.builtin.debug:
