@@ -70,15 +70,15 @@
 #   loop: "{{ rulebook_list }}"
 
 - name: Join rulebook_list and extra_vars_list
-  ansible.builtin.set_fact:
+  set_fact:
     activations_list: >-
       {{
-        activations_list | default([])
-        + [item | combine({'var_id': extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first})]
-        if extra_vars_list | selectattr('name', 'equalto', item.name) | list
-        else [item]
+        rulebook_list | map('combine', {'var_id': extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first})
+        | list
       }}
   loop: "{{ rulebook_list }}"
+  loop_control:
+    loop_var: item
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
