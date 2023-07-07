@@ -45,7 +45,7 @@
   loop: "{{ rulebook_list }}"
   vars:
     results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
-  when: results_item.json.id is defined
+  when: results_item.json.id is defined and results_item.json.id != ""
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
