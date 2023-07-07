@@ -91,7 +91,7 @@ def get_decision_environment_id(controller_url, controller_user, controller_pass
         raise Exception(f"Failed to retrieve decision environment '{decision_env}': {response.text}")
 
 
-def create_activation(module, decision_env_id):
+def create_activation(module):
     # Extract input parameters from the module object
     controller_url = module.params['controller_url']
     controller_user = module.params['controller_user']
