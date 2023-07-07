@@ -36,7 +36,7 @@
 
 - name: Debug
   ansible.builtin.debug:
-    var: _extra_vars
+    var: _extra_vars.results.0.item | list
 
 
 - name: EDA Controller | Build rulebook id/rulebook association for activations
