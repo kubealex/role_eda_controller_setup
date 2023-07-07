@@ -35,17 +35,29 @@
   register: _extra_vars
   when: item.extra_vars is defined and item.extra_vars != ""
 
+
 - name: EDA Controller | Attach extra vars to activations
   ansible.builtin.set_fact:
-    rulebook_list: >-
-      {{
-        rulebook_list | map('combine', { 'var_id': results_item.json.id })
-        if results_item.item.name == item.name else item
-      }}
-  loop: "{{ rulebook_list }}"
-  vars:
-    results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
-  when: results_item.json.id is defined and results_item.json.id != ""
+    extra_vars_list: "{{ extra_vars_list | default([]) + [{'name': item.name, 'var_id': item.json.id | int}] }}"
+  loop: "{{ _extra_vars.results }}"
+
+- name: Merge lists
+  ansible.builtin.set_fact:
+    final_list: "{{ rulebook_list | union(ex) }}"
+
+- name: Print
+  ansible.builtin.debug:
+    var: final_list
+
+  #   rulebook_list: >-
+  #     {{
+  #       rulebook_list | map('combine', { 'var_id': results_item.json.id })
+  #       if results_item.item.name == item.name else item
+  #     }}
+  # loop: "{{ rulebook_list }}"
+  # vars:
+  #   results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
+  # when: results_item.json.id is defined and results_item.json.id != ""
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
