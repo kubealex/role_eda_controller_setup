@@ -65,11 +65,9 @@
   ansible.builtin.set_fact:
     activations_list: >-
       {{
-        activations_list | default([])
-        + [item]
+        activations_list | | default([]) | union(rulebook_list)
       }}
   loop: "{{ rulebook_list }}"
-  when: item.name not in temp_dict
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
