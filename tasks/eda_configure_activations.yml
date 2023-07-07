@@ -25,7 +25,7 @@
     url_username: "{{ eda_controller_user }}"
     url_password: "{{ eda_controller_password }}"
     method: POST
-    body: {"extra_var": "{{ variables | string | default(null, true) }}"}
+    body: {"extra_var": "{{ item.variables | string | default(null, true) }}"}
     body_format: json
     validate_certs: false
     status_code:
