@@ -42,7 +42,7 @@
   loop: "{{ _extra_vars.results }}"
   when: item.json.id is defined
 
-- name: Create temporary dictionary
+- name: EDA Controller | Create temporary dictionary
   ansible.builtin.set_fact:
     temp_dict: >-
       {{
@@ -51,19 +51,19 @@
       }}
   loop: "{{ rulebook_list }}"
 
-- name: Join rulebook_list and extra_vars_list
+- name: EDA Controller | Join rulebook_list and extra_vars_list
   ansible.builtin.set_fact:
-    result: >-
+    activations_list: >-
       {{
-        result | default([])
+        activations_list | default([])
         + [temp_dict[item.name] | combine({'var_id': item.var_id})]
       }}
   loop: "{{ extra_vars_list }}"
   when: item.name in temp_dict
 
 - name: Display the result
-  debug:
-    var: result
+  ansible.builtin.debug:
+    var: activations_list
 
   #   rulebook_list: >-
   #     {{
@@ -88,7 +88,7 @@
     status_code:
       - 200
       - 201
-  loop: "{{ rulebook_list }}"
+  loop: "{{ activations_list }}"
   when: item.var_id is defined
 
 - name: EDA Controller | Create activations for given project
@@ -104,5 +104,5 @@
     status_code:
       - 200
       - 201
-  loop: "{{ rulebook_list }}"
+  loop: "{{ activations_list }}"
   when: item.var_id is not defined
