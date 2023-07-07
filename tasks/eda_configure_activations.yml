@@ -38,7 +38,7 @@
 
 - name: EDA Controller | Attach extra vars to activations
   ansible.builtin.set_fact:
-    extra_vars_list: "{{ extra_vars_list | default([]) + [{'name': item.name, 'var_id': item.json.id | int}] }}"
+    extra_vars_list: "{{ extra_vars_list | default([]) + [{'name': item.item.name, 'var_id': item.json.id | int}] }}"
   loop: "{{ _extra_vars.results }}"
   when: item.json.id is defined
 
