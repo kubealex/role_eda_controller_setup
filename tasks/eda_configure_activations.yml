@@ -49,7 +49,7 @@
   loop: "{{ rulebook_list }}"
   vars:
     results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
-  when: _extra_vars is defined
+  when: not _extra_vars.skipped
 
 - name: Debug
   ansible.builtin.debug:
