@@ -25,7 +25,7 @@
     url_username: "{{ eda_controller_user }}"
     url_password: "{{ eda_controller_password }}"
     method: POST
-    body: {"extra_var": "{{ item.variables | default(null, true) | string }}"}
+    body: {"extra_var": "{{ item.extra_vars | default(null, true) | string }}"}
     body_format: json
     validate_certs: false
     status_code:
@@ -33,7 +33,7 @@
       - 201
   loop: "{{ eda_activations }}"
   register: _extra_vars
-  when: item.variables is defined and item.variables != ""
+  when: item.extra_vars is defined and item.extra_vars != ""
 
 - name: EDA Controller | Attach extra vars to activations
   ansible.builtin.set_fact:
@@ -78,5 +78,3 @@
       - 201
   loop: "{{ rulebook_list }}"
   when: _extra_vars.skipped
-
-

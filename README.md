@@ -67,7 +67,7 @@ Role Variables
 |------------|---------------------------------------------------|
 | `name`     | The name of the activation.                      |
 | `rulebook` | The YAML file of the associated rulebook.        |
-
+| `extra_vars` | Extra variables to add to the rulebook.        |
 
 Dependencies
 ------------
