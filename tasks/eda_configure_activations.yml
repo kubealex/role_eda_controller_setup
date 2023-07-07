@@ -73,12 +73,11 @@
   set_fact:
     activations_list: >-
       {{
-        rulebook_list | map('combine', {'var_id': extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first | default(omit) })
-        | list
+        activations_list | default([])
+        + [item | combine({'var_id': (extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first)})
+            | default(item, true)]
       }}
   loop: "{{ rulebook_list }}"
-  loop_control:
-    loop_var: item
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
