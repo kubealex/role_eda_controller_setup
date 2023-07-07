@@ -42,30 +42,41 @@
   loop: "{{ _extra_vars.results }}"
   when: item.json.id is defined
 
-- name: EDA Controller | Create temporary dictionary
-  ansible.builtin.set_fact:
-    temp_dict: >-
-      {{
-        temp_dict | default({})
-        | combine({item.name: {'name': item.name, 'id': item.id}})
-      }}
-  loop: "{{ rulebook_list }}"
+# - name: EDA Controller | Create temporary dictionary
+#   ansible.builtin.set_fact:
+#     temp_dict: >-
+#       {{
+#         temp_dict | default({})
+#         | combine({item.name: {'name': item.name, 'id': item.id}})
+#       }}
+#   loop: "{{ rulebook_list }}"
 
-- name: EDA Controller | Join rulebook_list and extra_vars_list
+# - name: EDA Controller | Join rulebook_list and extra_vars_list
+#   ansible.builtin.set_fact:
+#     activations_list: >-
+#       {{
+#         activations_list | default([])
+#         + [temp_dict[item.name] | combine({'var_id': item.var_id})]
+#         if item.name in temp_dict else item
+#       }}
+#   loop: "{{ extra_vars_list }}"
+
+# - name: Add remaining rulebook_list entries
+#   ansible.builtin.set_fact:
+#     activations_list: >-
+#       {{
+#         activations_list | default([]) | union(rulebook_list)
+#       }}
+#   loop: "{{ rulebook_list }}"
+
+- name: Join rulebook_list and extra_vars_list
   ansible.builtin.set_fact:
     activations_list: >-
       {{
         activations_list | default([])
-        + [temp_dict[item.name] | combine({'var_id': item.var_id})]
-        if item.name in temp_dict else item
-      }}
-  loop: "{{ extra_vars_list }}"
-
-- name: Add remaining rulebook_list entries
-  ansible.builtin.set_fact:
-    activations_list: >-
-      {{
-        activations_list | default([]) | union(rulebook_list)
+        + [item | combine({'var_id': extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first})]
+        if extra_vars_list | selectattr('name', 'equalto', item.name) | list
+        else [item]
       }}
   loop: "{{ rulebook_list }}"
 
