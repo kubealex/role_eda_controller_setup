@@ -43,7 +43,7 @@
   ansible.builtin.set_fact:
     rulebook_list: >-
       {{
-        rulebook_list | map('combine', { 'var_id': results_item.id })
+        rulebook_list | map('combine', { 'var_id': results_item.json.id })
         if results_item.item.name == item.name else item
       }}
   loop: "{{ rulebook_list }}"
