@@ -61,20 +61,6 @@
   loop: "{{ extra_vars_list }}"
   when: item.name in temp_dict
 
-- name: Display the result
-  ansible.builtin.debug:
-    var: activations_list
-
-  #   rulebook_list: >-
-  #     {{
-  #       rulebook_list | map('combine', { 'var_id': results_item.json.id })
-  #       if results_item.item.name == item.name else item
-  #     }}
-  # loop: "{{ rulebook_list }}"
-  # vars:
-  #   results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
-  # when: results_item.json.id is defined and results_item.json.id != ""
-
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
     url: "{{ eda_controller_url }}/api/eda/v1/activations/"
