@@ -73,7 +73,7 @@
   set_fact:
     activations_list: >-
       {{
-        rulebook_list | map('combine', {'var_id': extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first})
+        rulebook_list | map('combine', {'var_id': extra_vars_list | selectattr('name', 'equalto', item.name) | map(attribute='var_id') | first | default(omit) })
         | list
       }}
   loop: "{{ rulebook_list }}"
