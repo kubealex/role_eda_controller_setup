@@ -42,13 +42,28 @@
   loop: "{{ _extra_vars.results }}"
   when: item.json.id is defined
 
-- name: Merge lists
+- name: Create temporary dictionary
   ansible.builtin.set_fact:
-    final_list: "{{ rulebook_list | union(extra_vars_list) }}"
+    temp_dict: >-
+      {{
+        temp_dict | default({})
+        | combine({item.name: {'name': item.name, 'id': item.id}})
+      }}
+  loop: "{{ rulebook_list }}"
 
-- name: Print
-  ansible.builtin.debug:
-    var: final_list
+- name: Join rulebook_list and extra_vars_list
+  ansible.builtin.set_fact:
+    result: >-
+      {{
+        result | default([])
+        + [temp_dict[item.name] | combine({'var_id': item.var_id})]
+      }}
+  loop: "{{ extra_vars_list }}"
+  when: item.name in temp_dict
+
+- name: Display the result
+  debug:
+    var: result
 
   #   rulebook_list: >-
   #     {{
