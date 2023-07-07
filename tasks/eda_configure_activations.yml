@@ -34,14 +34,12 @@
   loop: "{{ eda_activations }}"
   register: _extra_vars
 
-- name: Debug
-  ansible.builtin.debug:
-    var: _extra_vars.results.0.item | list
-
-
 - name: EDA Controller | Build rulebook id/rulebook association for activations
   ansible.builtin.set_fact:
-    activation_list: "{{ rulebook_list | union(_extra_vars.results.0.item) }}"
+    activation_list: "{{ activations | map('ternary', item.name == results_item.name, item | combine({'vars_id': results_item.id}), item) }}"
+  loop: "{{ _extra_vars.results.0 }}"
+  loop_control:
+    loop_var: results_item
 
 - name: Debug
   ansible.builtin.debug:
