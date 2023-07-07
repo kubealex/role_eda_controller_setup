@@ -35,10 +35,6 @@
   register: _extra_vars
   when: item.variables is defined and item.variables != ""
 
-- name: Debug
-  ansible.builtin.debug:
-    var: _extra_vars
-
 - name: EDA Controller | Attach extra vars to activations
   ansible.builtin.set_fact:
     rulebook_list: >-
@@ -51,10 +47,6 @@
     results_item: "{{ _extra_vars.results | selectattr('item.name', 'equalto', item.name) | first }}"
   when: not _extra_vars.skipped
 
-- name: Debug
-  ansible.builtin.debug:
-    var: rulebook_list
-
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
     url: "{{ eda_controller_url }}/api/eda/v1/activations/"
@@ -62,7 +54,7 @@
     url_username: "{{ eda_controller_user }}"
     url_password: "{{ eda_controller_password }}"
     method: POST
-    body: {"restart_policy":"{{ restart_policy | default('always', true) }}","is_enabled":"{{ enabled | default(true, true) | bool }}","name":"{{ item.name }}","project_id":"{{ eda_project_id | int }}","decision_environment_id":"{{ eda_denv_id | int }}","rulebook_id":"{{ item.id | int }}", "extra_var_id": "{{ item.var_id | default(null,true) }}"}
+    body: {"restart_policy":"{{ restart_policy | default('always', true) }}","is_enabled":"{{ enabled | default(true, true) | bool }}","name":"{{ item.name }}","project_id":"{{ eda_project_id | int }}","decision_environment_id":"{{ eda_denv_id | int }}","rulebook_id":"{{ item.id | int }}", "extra_var_id": "{{ item.var_id | default(None, true) }}"}
     body_format: json
     validate_certs: false
     status_code:
