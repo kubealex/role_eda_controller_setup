@@ -43,7 +43,7 @@
   ansible.builtin.set_fact:
     rulebook_list: >-
       {{ rulebook_list | json_query('[?name == `{}`].id |= {} | [0]'.format(item.name, item.json.id)) }}
-  loop: "{{ results }}"
+  loop: "{{ _extra_vars.results }}"
   loop_control:
     loop_var: item
 
