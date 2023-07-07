@@ -3,6 +3,4 @@
     controller_url: "{{ eda_controller_url }}"
     controller_user: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
-    project_name: "{{ eda_project.name }}"
-    decision_env: "{{ eda_decision_env.name }}"
     activations: "{{ eda_activations }}"
