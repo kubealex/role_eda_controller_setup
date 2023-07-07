@@ -49,7 +49,7 @@
 
 - name: Debug
   ansible.builtin.debug:
-    var: activation_list
+    var: rulebook_list
 
 - name: EDA Controller | Create activations for given project
   ansible.builtin.uri:
