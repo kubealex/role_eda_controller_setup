@@ -1,31 +1,7 @@
-- name: EDA Controller | Project check
-  ansible.builtin.uri:
-    url: "{{ eda_controller_url }}/api/eda/v1/projects/?name={{ eda_project.name | replace(' ', '+') }}"
-    force_basic_auth: true
-    url_username: "{{ eda_controller_user }}"
-    url_password: "{{ eda_controller_password }}"
-    method: GET
-    validate_certs: false
-    status_code:
-      - 200
-      - 201
-  register: _project_check
-
-- name: EDA Controller | Project creation
-  ansible.builtin.uri:
-    url: "{{ eda_controller_url }}/api/eda/v1/projects/{{ _project_check.json.results[0].id | string + '/' if _project_check.json.results | length > 0 else '' }}"
-    force_basic_auth: true
-    url_username: "{{ eda_controller_user }}"
-    url_password: "{{ eda_controller_password }}"
-    method: "{{ 'PATCH' if _project_check.json.results | length > 0 else 'POST' }}"
-    body: '{"name":"{{ eda_project.name }}","description":"{{ eda_project.description }}","url":"{{ eda_project.git_url }}"}'
-    body_format: json
-    validate_certs: false
-    status_code:
-      - 200
-      - 201
-  register: _project_create
-
-- name: EDA Controller | Save project_id
-  ansible.builtin.set_fact:
-    eda_project_id: "{{ _project_create.json.id }}"
+- name: EDA Controller | Retrieve rulebooks for given project
+  eda_projects:
+    controller_url: "{{ eda_controller_url }}"
+    project_name: "EDA Demo Project"
+    controller_user: "{{ eda_controller_user }}"
+    controller_password: "{{ eda_controller_password }}"
+    project_git_url: https://github.com/kubealex/event-driven-automation
