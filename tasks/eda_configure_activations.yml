@@ -65,7 +65,7 @@
   ansible.builtin.set_fact:
     activations_list: >-
       {{
-        activations_list | | default([]) | union(rulebook_list)
+        activations_list | default([]) | union(rulebook_list)
       }}
   loop: "{{ rulebook_list }}"
 
