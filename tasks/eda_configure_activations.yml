@@ -36,7 +36,7 @@
 
 - name: EDA Controller | Build rulebook id/rulebook association for activations
   ansible.builtin.set_fact:
-    activation_list: "{{ rulebook_list | union(_extra_vars.results.item) }}"
+    activation_list: "{{ rulebook_list | union(_extra_vars.results.0.item) }}"
 
 - name: Debug
   ansible.builtin.debug:
