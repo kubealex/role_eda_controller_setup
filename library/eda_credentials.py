@@ -81,7 +81,7 @@ def main():
                     choices=[
                         'GitHub Personal Access Token',
                         'GitLab Personal Access Token',
-                        'Container registry'
+                        'Container Registry'
                     ]
                 ),
             ),
