@@ -1,5 +1,10 @@
 ---
 # tasks file for role_eda_controller_setup
+
+- name: EDA Controller | Import credential configuration tasks
+  ansible.builtin.import_tasks:
+    file: eda_configure_activations.yml
+
 - name: EDA Controller | Import project configuration tasks
   ansible.builtin.import_tasks:
     file: eda_configure_project.yml
