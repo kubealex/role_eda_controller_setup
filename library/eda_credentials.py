@@ -13,6 +13,7 @@ def check_credential_exists(controller_url, controller_user, controller_password
             return int(credential_id) if credential_id else None
     return None
 
+
 def create_or_update_credentials(module):
     # Extract input parameters from the module object
     controller_url = module.params['controller_url']
@@ -24,7 +25,7 @@ def create_or_update_credentials(module):
 
     for credential in credentials:
         name = credential['name']
-        description = credential['description']
+        description = credential.get('description')
         username = credential['username']
         secret = credential['secret']
         credential_type = credential['credential_type']
@@ -65,7 +66,26 @@ def main():
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
-        credentials=dict(type='list', required=True),
+        credentials=dict(
+            type='list',
+            required=True,
+            elements='dict',
+            options=dict(
+                description=dict(type='str', required=False),
+                name=dict(type='str', required=True),
+                username=dict(type='str', required=True),
+                secret=dict(type='str', required=True, no_log=True),
+                credential_type=dict(
+                    type='str',
+                    required=True,
+                    choices=[
+                        'GitHub Personal Access Token',
+                        'GitLab Personal Access Token',
+                        'Container registry'
+                    ]
+                ),
+            ),
+        ),
     )
 
     module = AnsibleModule(
