@@ -47,7 +47,6 @@ options:
         - extra_vars: (Optional) Additional variables for the activation.
     required: true
 """
-
 from ansible.module_utils.basic import AnsibleModule
 import requests
 
@@ -77,17 +76,22 @@ def create_activations(module):
     controller_url = module.params['controller_url']
     controller_user = module.params['controller_user']
     controller_password = module.params['controller_password']
-    decision_env = module.params['decision_env']
     activations = module.params['activations']
 
     response_list = []
 
     for activation in activations:
-        project_name = activation['project_name']
+        project_name = activation.get('project_name')
+        decision_env = activation.get('decision_env')
         enabled = activation.get('enabled', True)
         restart_policy = activation.get('restart_policy', 'always')
         activation_name = activation['name']
         rulebook_name = activation['rulebook']
+
+        if not project_name:
+            module.fail_json(msg="Project name is required for each activation.")
+        if not decision_env:
+            module.fail_json(msg="Decision environment is required for each activation.")
 
         project_id = get_project_id(controller_url, controller_user, controller_password, project_name)
         if project_id is None:
@@ -163,7 +167,6 @@ def main():
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
-        decision_env=dict(type='str', required=True),
         activations=dict(type='list', required=True),
     )
 
