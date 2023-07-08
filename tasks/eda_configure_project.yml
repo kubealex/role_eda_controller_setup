@@ -1,7 +1,6 @@
 - name: EDA Controller | Retrieve rulebooks for given project
   eda_projects:
     controller_url: "{{ eda_controller_url }}"
-    project_name: "EDA Demo Project"
     controller_user: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
-    project_git_url: https://github.com/kubealex/event-driven-automation
+    projects: "{{ eda_projects }}"
