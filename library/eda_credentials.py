@@ -13,7 +13,7 @@ def check_credential_exists(controller_url, controller_user, controller_password
             return int(credential_id) if credential_id else None
     return None
 
-def create_credentials(module):
+def create_or_update_credentials(module):
     # Extract input parameters from the module object
     controller_url = module.params['controller_url']
     controller_user = module.params['controller_user']
