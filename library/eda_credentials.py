@@ -7,9 +7,11 @@ def check_credential_exists(controller_url, controller_user, controller_password
     url = f"{controller_url}/api/eda/v1/credentials/?name={name}"
     response = requests.get(url, auth=(controller_user, controller_password), verify=False)
     if response.status_code in (200, 201):
-        credential_id = response.json().get('results', [{}])[0].get('id')
-        return int(credential_id) if credential_id else None
-
+        count = response.json().get('count', 0)
+        if count > 0:
+            credential_id = response.json().get('results', [{}])[0].get('id')
+            return int(credential_id) if credential_id else None
+    return None
 
 def create_or_update_credentials(module):
     # Extract input parameters from the module object
