@@ -36,11 +36,12 @@ def create_or_update_credentials(module):
         # Prepare request body
         body = {
             'name': name,
-            'description': description,
             'credential_type': credential_type,
             'username': username,
             'secret': secret
         }
+        if description:
+            body['description'] = description
 
         # Create or update credential
         url = f"{controller_url}/api/eda/v1/credentials/"
@@ -81,7 +82,7 @@ def main():
                     choices=[
                         'GitHub Personal Access Token',
                         'GitLab Personal Access Token',
-                        'Container Registry'
+                        'Container registry'
                     ]
                 ),
             ),
