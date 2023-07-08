@@ -19,30 +19,17 @@ options:
       - The password for authenticating with the EDA Controller.
     type: str
     required: true
-  restart_policy:
-    description:
-      - The restart policy for the activations.
-      - Default: 'always'
-    type: str
-    default: 'always'
-  enabled:
-    description:
-      - Whether the activations should be enabled.
-      - Default: true
-    type: bool
-    default: true
-  decision_env:
-    description:
-      - The name of the decision environment.
-    type: str
-    required: true
   activations:
     description:
       - The list of activations to create.
       - Each activation requires the following parameters:
         - name: The name of the activation.
+        - project_name: The name of the project associated with the activation.
         - rulebook: The name of the rulebook associated with the activation.
         - extra_vars: The extra variables for the activation.
+        - restart_policy: The restart policy for the activation. Default: 'always'
+        - enabled: Whether the activation should be enabled. Default: true
+        - decision_env: The name of the decision environment.
       - At least one activation must be provided.
     type: list
     required: true
@@ -51,6 +38,11 @@ options:
       name:
         description:
           - The name of the activation.
+        type: str
+        required: true
+      project_name:
+        description:
+          - The name of the project associated with the activation.
         type: str
         required: true
       rulebook:
@@ -64,6 +56,23 @@ options:
           - Default: ''
         type: str
         default: ''
+      restart_policy:
+        description:
+          - The restart policy for the activation.
+          - Default: 'always'
+        type: str
+        default: 'always'
+      enabled:
+        description:
+          - Whether the activation should be enabled.
+          - Default: true
+        type: bool
+        default: true
+      decision_env:
+        description:
+          - The name of the decision environment.
+        type: str
+        required: true
 """
 
 from ansible.module_utils.basic import AnsibleModule
@@ -187,6 +196,10 @@ def main():
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
+        restart_policy=dict(type='str', default='always'),
+        enabled=dict(type='bool', default=True),
+        project_name=dict(type='str', required=True),
+        decision_env=dict(type='str', required=True),
         activations=dict(
             type='list',
             required=True,
@@ -195,9 +208,6 @@ def main():
                 name=dict(type='str', required=True),
                 rulebook=dict(type='str', required=True),
                 extra_vars=dict(type='str', default=''),
-                restart_policy=dict(type='str', default='always'),
-                enabled=dict(type='bool', default=True),
-                decision_env=dict(type='str', required=True),
             ),
         ),
     )
