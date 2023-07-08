@@ -3,7 +3,7 @@
 
 - name: EDA Controller | Import credential configuration tasks
   ansible.builtin.import_tasks:
-    file: eda_configure_activations.yml
+    file: eda_configure_credentials.yml
 
 - name: EDA Controller | Import project configuration tasks
   ansible.builtin.import_tasks:
