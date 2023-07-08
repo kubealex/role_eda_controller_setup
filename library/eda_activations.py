@@ -79,27 +79,30 @@ def create_activations(module):
     controller_password = module.params['controller_password']
     activations = module.params['activations']
 
-    project_name = activations['project_name']
-    project_id = get_project_id(controller_url, controller_user, controller_password, project_name)
-    if not project_id:
-        module.fail_json(msg=f"Project '{project_name}' not found.")
-
     rulebook_list = []
     extra_vars_list = []
 
-    # Retrieve rulebooks
-    url = f"{controller_url}/api/eda/v1/rulebooks/?project_id={project_id}"
-    response = requests.get(url, auth=(controller_user, controller_password), verify=False)
-    if response.status_code in (200, 201):
-        rulebooks = response.json().get('results', [])
-        for activation in activations:
+    # Create activations for given project
+    url = f"{controller_url}/api/eda/v1/activations/"
+    response_list = []
+
+    for activation in activations:
+        project_name = activation['project_name']
+        project_id = get_project_id(controller_url, controller_user, controller_password, project_name)
+        if not project_id:
+            module.fail_json(msg=f"Project '{project_name}' not found.")
+
+        # Retrieve rulebooks
+        url = f"{controller_url}/api/eda/v1/rulebooks/?project_id={project_id}"
+        response = requests.get(url, auth=(controller_user, controller_password), verify=False)
+        if response.status_code in (200, 201):
+            rulebooks = response.json().get('results', [])
             for rulebook in rulebooks:
                 if rulebook['name'] == activation['rulebook']:
                     rulebook_list.append({'name': activation['name'], 'id': int(rulebook['id'])})
                     break
 
-    # Create extra vars for activations
-    for activation in activations:
+        # Create extra vars for activations
         if 'extra_vars' in activation and activation['extra_vars']:
             url = f"{controller_url}/api/eda/v1/extra-vars/"
             body = {"extra_var": activation['extra_vars']}
@@ -108,9 +111,10 @@ def create_activations(module):
             if response.status_code in (200, 201):
                 extra_vars_list.append({'name': activation['name'], 'var_id': int(response.json().get('id'))})
 
-    # Join rulebook_list and extra_vars_list
-    activations_list = []
-    for activation in activations:
+        denv_id = get_decision_environment_id(controller_url, controller_user, controller_password, activation['decision_env'])
+        if not denv_id:
+            module.fail_json(msg=f"Decision environment '{activation['decision_env']}' not found.")
+
         name = activation['name']
         rulebook_id = None
         extra_var_id = None
@@ -128,23 +132,17 @@ def create_activations(module):
         activation_item = {
             'name': name,
             'project_id': project_id,
-            'decision_environment_id': module.params['decision_env_id'],
+            'decision_environment_id': denv_id,
             'rulebook_id': rulebook_id,
-            'restart_policy': module.params['restart_policy'],
-            'is_enabled': module.params['enabled']
+            'restart_policy': activation.get('restart_policy', 'always'),
+            'is_enabled': activation.get('enabled', True)
         }
 
         if extra_var_id is not None:
             activation_item['extra_var_id'] = extra_var_id
 
-        activations_list.append(activation_item)
-
-    # Create activations for given project
-    url = f"{controller_url}/api/eda/v1/activations/"
-    response_list = []
-    for activation in activations_list:
         response = requests.post(url, auth=(controller_user, controller_password),
-                                 json=activation, verify=False)
+                                 json=activation_item, verify=False)
         if response.status_code in (200, 201):
             response_list.append(response.json())
 
@@ -156,17 +154,16 @@ def main():
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
-        activations=dict(type='dict', required=True, options=dict(
+        activations=dict(type='list', required=True, elements='dict', options=dict(
             project_name=dict(type='str', required=True),
-            restart_policy=dict(type='str', default='always'),
-            enabled=dict(type='bool', default=True),
             decision_env=dict(type='str', required=True),
-            items=dict(type='list', required=True, options=dict(
-                name=dict(type='str', required=True),
-                rulebook=dict(type='str', required=True),
-                extra_vars=dict(type='str', default=''),
-            )),
-        )),
+            name=dict(type='str', required=True),
+            rulebook=dict(type='str', required=True),
+            extra_vars=dict(type='str', default=''),
+            restart_policy=dict(type='str', default='always'),
+            enabled=dict(type='bool', default=True)
+            ),
+        ),
     )
 
     module = AnsibleModule(
