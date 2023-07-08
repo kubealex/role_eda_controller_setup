@@ -2,51 +2,70 @@
 DOCUMENTATION = """
 ---
 module: eda_activations
-short_description: Manage activations in EDA Controller
-version_added: '1.0'
-author: Your Name
-description:
-  - This module allows you to create activations in EDA Controller for a given project.
+short_description: Create activations in EDA Controller for a given project and decision environment
 options:
   controller_url:
     description:
-      - The URL of the EDA Controller API.
-    required: true
-  project_name:
-    description:
-      - The name of the project in EDA Controller.
+      - The URL of the EDA Controller.
+    type: str
     required: true
   controller_user:
     description:
-      - The username for authentication with the EDA Controller API.
+      - The username for authenticating with the EDA Controller.
+    type: str
     required: true
   controller_password:
     description:
-      - The password for authentication with the EDA Controller API.
+      - The password for authenticating with the EDA Controller.
+    type: str
     required: true
-    no_log: true
   restart_policy:
     description:
-      - The restart policy for the activations. Default is "always".
-    required: false
-    default: "always"
+      - The restart policy for the activations.
+      - Default: 'always'
+    type: str
+    default: 'always'
   enabled:
     description:
-      - Whether the activations should be enabled. Default is true.
-    required: false
+      - Whether the activations should be enabled.
+      - Default: true
+    type: bool
     default: true
   decision_env:
     description:
-      - The name of the decision environment in EDA Controller.
+      - The name of the decision environment.
+    type: str
     required: true
   activations:
     description:
-      - A list of activation objects containing the following parameters:
+      - The list of activations to create.
+      - Each activation requires the following parameters:
         - name: The name of the activation.
         - rulebook: The name of the rulebook associated with the activation.
-        - extra_vars: (Optional) Additional variables for the activation.
+        - extra_vars: The extra variables for the activation.
+      - At least one activation must be provided.
+    type: list
     required: true
+    elements: dict
+    options:
+      name:
+        description:
+          - The name of the activation.
+        type: str
+        required: true
+      rulebook:
+        description:
+          - The name of the rulebook associated with the activation.
+        type: str
+        required: true
+      extra_vars:
+        description:
+          - The extra variables for the activation.
+          - Default: ''
+        type: str
+        default: ''
 """
+
 from ansible.module_utils.basic import AnsibleModule
 import requests
 
@@ -162,12 +181,25 @@ def create_activations(module):
     module.exit_json(changed=True, activations=response_list)
 
 
+
 def main():
     module_args = dict(
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
-        activations=dict(type='list', required=True),
+        restart_policy=dict(type='str', default='always'),
+        enabled=dict(type='bool', default=True),
+        decision_env=dict(type='str', required=True),
+        activations=dict(
+            type='list',
+            required=True,
+            elements='dict',
+            options=dict(
+                name=dict(type='str', required=True),
+                rulebook=dict(type='str', required=True),
+                extra_vars=dict(type='str', default=''),
+            ),
+        ),
     )
 
     module = AnsibleModule(
