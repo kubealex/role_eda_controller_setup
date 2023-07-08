@@ -11,12 +11,12 @@ def check_credential_exists(controller_url, controller_user, controller_password
         return int(credential_id) if credential_id else None
 
 
-def create_or_update_credential(module):
+def create_or_update_credentials(module):
     # Extract input parameters from the module object
     controller_url = module.params['controller_url']
     controller_user = module.params['controller_user']
     controller_password = module.params['controller_password']
-    credentials = module.params['eda_credentials']
+    credentials = module.params['credentials']
 
     response_list = []
 
@@ -63,7 +63,7 @@ def main():
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
-        eda_credentials=dict(type='list', required=True),
+        credentials=dict(type='list', required=True),
     )
 
     module = AnsibleModule(
@@ -72,7 +72,7 @@ def main():
     )
 
     try:
-        create_or_update_credential(module)
+        create_or_update_credentials(module)
     except Exception as e:
         module.fail_json(msg=str(e))
 
