@@ -1,4 +1,85 @@
 #!/usr/bin/python
+DOCUMENTATION = """
+---
+module: eda_credentials
+short_description: Create or update credentials in EDA Controller.
+description:
+  - This module allows creating or updating credentials in EDA Controller. It supports various credential types
+    such as GitHub Personal Access Token, GitLab Personal Access Token, and Container registry.
+    The module uses the EDA Controller API to interact with the credentials.
+
+options:
+  controller_url:
+    description:
+      - The URL of the EDA Controller.
+    type: str
+    required: true
+
+  controller_user:
+    description:
+      - The username for authentication with the EDA Controller.
+    type: str
+    required: true
+
+  controller_password:
+    description:
+      - The password for authentication with the EDA Controller.
+    type: str
+    required: true
+    no_log: true
+
+  credentials:
+    description:
+      - A list of credentials to create or update.
+    type: list
+    required: true
+    elements: dict
+    suboptions:
+      name:
+        description:
+          - The name of the credential.
+        type: str
+        required: true
+
+      description:
+        description:
+          - The description of the credential.
+        type: str
+        required: false
+
+      username:
+        description:
+          - The username associated with the credential.
+        type: str
+        required: true
+
+      secret:
+        description:
+          - The secret/password associated with the credential.
+        type: str
+        required: true
+        no_log: true
+
+      credential_type:
+        description:
+          - The type of the credential.
+        type: str
+        required: true
+        choices:
+          - "GitHub Personal Access Token"
+          - "GitLab Personal Access Token"
+          - "Container registry"
+
+notes:
+  - The module retrieves the list of existing credentials by making API requests to the EDA Controller.
+  - If a credential with the specified name already exists, it will be updated with the provided information.
+    Otherwise, a new credential will be created.
+  - The module uses basic authentication to authenticate with the EDA Controller.
+
+requirements:
+  - The requests module must be installed on the Ansible control node.
+
+"""
 from ansible.module_utils.basic import AnsibleModule
 import requests
 
