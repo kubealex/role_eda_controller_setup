@@ -13,7 +13,7 @@ def check_credential_exists(controller_url, controller_user, controller_password
             return int(credential_id) if credential_id else None
     return None
 
-def create_or_update_credentials(module):
+def create_credentials(module):
     # Extract input parameters from the module object
     controller_url = module.params['controller_url']
     controller_user = module.params['controller_user']
@@ -24,16 +24,16 @@ def create_or_update_credentials(module):
 
     for credential in credentials:
         name = credential['name']
-        description = credential.get('description', '')
+        description = credential['description']
         username = credential['username']
         secret = credential['secret']
         credential_type = credential['credential_type']
 
-        # Check if the credential exists
+        # Check if credential exists
         credential_id = check_credential_exists(controller_url, controller_user, controller_password, name)
 
-        # Build the payload
-        payload = {
+        # Prepare request body
+        body = {
             'name': name,
             'description': description,
             'credential_type': credential_type,
@@ -41,21 +41,21 @@ def create_or_update_credentials(module):
             'secret': secret
         }
 
+        # Create or update credential
         url = f"{controller_url}/api/eda/v1/credentials/"
-        headers = {'Content-Type': 'application/json'}
-
         if credential_id:
-            # Update the credential
             url += f"{credential_id}/"
-            response = requests.patch(url, auth=(controller_user, controller_password), json=payload,
-                                      headers=headers, verify=False)
+            response = requests.patch(url, auth=(controller_user, controller_password), json=body, verify=False)
         else:
-            # Create the credential
-            response = requests.post(url, auth=(controller_user, controller_password), json=payload,
-                                     headers=headers, verify=False)
+            response = requests.post(url, auth=(controller_user, controller_password), json=body, verify=False)
 
         if response.status_code in (200, 201):
             response_list.append(response.json())
+        else:
+            module.fail_json(msg=f"Failed to create or update credential: {name}")
+
+        # Debug message to display response content
+        module.debug(f"Response Content: {response.content}")
 
     module.exit_json(changed=True, credentials=response_list)
 
