@@ -3,5 +3,4 @@
     controller_url: "{{ eda_controller_url }}"
     controller_user: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
-    decision_environment_image_url: "{{ eda_decision_env.image_url }}"
-    decision_environment_name: "{{ eda_decision_env.name }}"
+    decision_envs: "{{ eda_decision_envs }}"
