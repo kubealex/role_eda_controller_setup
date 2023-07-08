@@ -2,17 +2,21 @@
 # tasks file for role_eda_controller_setup
 
 - name: EDA Controller | Import credential configuration tasks
+  when: eda_credentials is defined and eda_credentials | length > 0
   ansible.builtin.import_tasks:
     file: eda_configure_credentials.yml
 
 - name: EDA Controller | Import project configuration tasks
+  when: eda_projects is defined and eda_projects | length > 0
   ansible.builtin.import_tasks:
     file: eda_configure_project.yml
 
 - name: EDA Controller | Import decision environment configuration tasks
+  when: eda_decision_envs is defined and eda_decision_envs | length > 0
   ansible.builtin.import_tasks:
     file: eda_configure_decision_env.yml
 
 - name: EDA Controller | Import activation configuration tasks
+  when: eda_activations is defined and eda_activations | length > 0
   ansible.builtin.import_tasks:
     file: eda_configure_activations.yml
