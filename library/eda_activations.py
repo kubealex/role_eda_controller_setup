@@ -187,9 +187,6 @@ def main():
         controller_url=dict(type='str', required=True),
         controller_user=dict(type='str', required=True),
         controller_password=dict(type='str', required=True, no_log=True),
-        restart_policy=dict(type='str', default='always'),
-        enabled=dict(type='bool', default=True),
-        decision_env=dict(type='str', required=True),
         activations=dict(
             type='list',
             required=True,
@@ -198,6 +195,9 @@ def main():
                 name=dict(type='str', required=True),
                 rulebook=dict(type='str', required=True),
                 extra_vars=dict(type='str', default=''),
+                restart_policy=dict(type='str', default='always'),
+                enabled=dict(type='bool', default=True),
+                decision_env=dict(type='str', required=True),
             ),
         ),
     )
