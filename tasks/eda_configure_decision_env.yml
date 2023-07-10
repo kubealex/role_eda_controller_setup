@@ -1,4 +1,4 @@
-- name: EDA Controller | Retrieve rulebooks for given project
+- name: EDA Controller | Configure decision environments
   eda_decision_environment:
     controller_url: "{{ eda_controller_url }}"
     controller_user: "{{ eda_controller_user }}"

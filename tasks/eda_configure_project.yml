@@ -1,4 +1,4 @@
-- name: EDA Controller | Retrieve rulebooks for given project
+- name: EDA Controller | Configure projects
   eda_projects:
     controller_url: "{{ eda_controller_url }}"
     controller_user: "{{ eda_controller_user }}"
