@@ -142,9 +142,9 @@ def create_activations(module):
         rulebook_list = []
 
         # Retrieve rulebooks
-        url = f"{controller_url}/api/eda/v1/rulebooks/?project_id={project_id}"
+        rulebook_url = f"{controller_url}/api/eda/v1/rulebooks/?project_id={project_id}"
         response = requests.get(
-            url, auth=(controller_user, controller_password), verify=False
+            rulebook_url, auth=(controller_user, controller_password), verify=False
         )
         if response.status_code in (200, 201):
             rulebooks = response.json().get("results", [])
@@ -159,7 +159,7 @@ def create_activations(module):
             )
 
         # Create activations for given project
-        url = f"{controller_url}/api/eda/v1/activations/"
+        activations_url = f"{controller_url}/api/eda/v1/activations/"
         headers = {"Content-Type": "application/json"}
         for rulebook_id in rulebook_list:
             body = {
@@ -171,10 +171,10 @@ def create_activations(module):
                 "is_enabled": enabled,
             }
             if "extra_vars" in activation and activation["extra_vars"]:
-                url = f"{controller_url}/api/eda/v1/extra-vars/"
+                vars_url = f"{controller_url}/api/eda/v1/extra-vars/"
                 extra_vars_body = {"extra_var": activation["extra_vars"]}
                 response = requests.post(
-                    url,
+                    vars_url,
                     auth=(controller_user, controller_password),
                     json=extra_vars_body,
                     headers=headers,
@@ -182,11 +182,10 @@ def create_activations(module):
                     timeout=15,
                 )
                 if response.status_code in (200, 201):
-                    body["extra_var"] = activation["extra_vars"]
-                    #body["extra_var_id"] = response.json().get("id")
+                  body["extra_var_id"] = response.json().get("id")
 
             response = requests.post(
-                url,
+                activations_url,
                 auth=(controller_user, controller_password),
                 json=body,
                 headers=headers,
@@ -197,7 +196,7 @@ def create_activations(module):
                 response_list.append(response.json())
             else:
                 module.fail_json(
-                    msg=f"Failed to create activation '{activation_name}' for project '{project_name}'. Request Body: {body} - RESPONSE: {response.content}"
+                    msg=f"Failed to create activation '{activation_name}' for project '{project_name}'. RESPONSE: {response.content}"
                 )
 
     module.exit_json(changed=True, activations=response_list)
