@@ -194,6 +194,8 @@ def create_activations(module):
             )
             if response.status_code in (200, 201):
                 response_list.append(response.json())
+            elif response.status_code == 400 and response.json().get("name") == "activation with this name already exists.":
+                response_list.append(response.json())
             else:
                 module.fail_json(
                     msg=f"Failed to create activation '{activation_name}' for project '{project_name}'. RESPONSE: {response.json()}"
