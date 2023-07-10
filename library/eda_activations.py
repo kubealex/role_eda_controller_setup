@@ -184,6 +184,9 @@ def create_activations(module):
                 if response.status_code in (200, 201):
                     body["extra_var_id"] = response.json().get("id")
 
+            module.debug(f"Request Body: {body}")
+
+
             response = requests.post(
                 url,
                 auth=(controller_user, controller_password),
