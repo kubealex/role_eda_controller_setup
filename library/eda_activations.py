@@ -182,6 +182,7 @@ def create_activations(module):
                     timeout=15,
                 )
                 if response.status_code in (200, 201):
+                    body["extra_var"] = activation["extra_vars"]
                     body["extra_var_id"] = response.json().get("id")
 
             response = requests.post(
