@@ -196,7 +196,7 @@ def create_activations(module):
                 response_list.append(response.json())
             else:
                 module.fail_json(
-                    msg=f"Failed to create activation '{activation_name}' for project '{project_name}'. Request Body: {body} - RESPONSE: {response}"
+                    msg=f"Failed to create activation '{activation_name}' for project '{project_name}'. Request Body: {body} - RESPONSE: {response.reason}"
                 )
 
     module.exit_json(changed=True, activations=response_list)
