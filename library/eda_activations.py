@@ -184,9 +184,6 @@ def create_activations(module):
                 if response.status_code in (200, 201):
                     body["extra_var_id"] = response.json().get("id")
 
-            module.debug(f"Request Body: {body}")
-
-
             response = requests.post(
                 url,
                 auth=(controller_user, controller_password),
@@ -199,7 +196,7 @@ def create_activations(module):
                 response_list.append(response.json())
             else:
                 module.fail_json(
-                    msg=f"Failed to create activation '{activation_name}' for project '{project_name}'."
+                    msg=f"Failed to create activation '{activation_name}' for project '{project_name}'. Request Body: {body}"
                 )
 
     module.exit_json(changed=True, activations=response_list)
