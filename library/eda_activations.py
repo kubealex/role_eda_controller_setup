@@ -200,3 +200,39 @@ def create_activations(module):
                 )
 
     module.exit_json(changed=True, activations=response_list)
+
+
+def main():
+    module_args = dict(
+        controller_url=dict(type='str', required=True),
+        controller_user=dict(type='str', required=True),
+        controller_password=dict(type='str', required=True, no_log=True),
+        activations=dict(
+            type='list',
+            required=True,
+            elements='dict',
+            options=dict(
+                name=dict(type='str', required=True),
+                project_name=dict(type='str', required=True),
+                rulebook=dict(type='str', required=True),
+                extra_vars=dict(type='str', default=''),
+                restart_policy=dict(type='str', default='always'),
+                enabled=dict(type='bool', default=True),
+                decision_env=dict(type='str', required=True),
+            ),
+        ),
+    )
+
+    module = AnsibleModule(
+        argument_spec=module_args,
+        supports_check_mode=False
+    )
+
+    try:
+        create_activations(module)
+    except Exception as e:
+        module.fail_json(msg=str(e))
+
+
+if __name__ == '__main__':
+    main()
