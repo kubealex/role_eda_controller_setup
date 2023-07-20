@@ -1,15 +1,12 @@
-Role Name
-=========
+# Role Name
 
 The role's purpose is to provide an helper for configuring EDA Controller via API
 
-Requirements
-------------
+## Requirements
 
 N/A
 
-Role Variables
---------------
+## Role Variables
 
 ## Configure Projects
 
@@ -29,7 +26,6 @@ Role Variables
 | `git_url`      | The Git URL of the EDA Project repository.                              |
 | `description`  | A description of the EDA Project.                                      |
 
-
 ## Configure Decision environments
 
 | Name                 | Description                                                                  | Mandatory | Defaults |
@@ -40,13 +36,12 @@ Role Variables
 | `eda_decision_env`   | Configuration for the Decision Environment.                                  | ✔️        |         |
 | `eda_denv_id` (set_fact variable) | The ID of the Decision Environment.                                    | ✔️        |         |
 
-### Structure of `eda_decision_env`:
+### Structure of `eda_decision_env`
 
 | Name           | Description                                                             |
 |----------------|-------------------------------------------------------------------------|
 | `name`         | The name of the Decision Environment.                                   |
 | `image_url`    | The URL of the image for the Decision Environment container.            |
-
 
 ## Configure activations
 
@@ -61,7 +56,7 @@ Role Variables
 | `enabled` (optional)                 | Flag to enable/disable the activations (default: true).                   | ❌        | `true`   |
 | `eda_denv_id`                        | The ID of the decision environment for the project.                      | ✔️        |         |
 
-### Structure of `eda_activations`:
+### Structure of `eda_activations`
 
 | Name       | Description                                       |
 |------------|---------------------------------------------------|
@@ -69,13 +64,11 @@ Role Variables
 | `rulebook` | The YAML file of the associated rulebook.        |
 | `extra_vars` | Extra variables to add to the rulebook.        |
 
-Dependencies
-------------
+## Dependencies
 
 N/A
 
-Example Playbook
-----------------
+## Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
@@ -101,13 +94,10 @@ Including an example of how to use your role (for instance, with variables passe
               - name: "eda-alertmanager"
                 rulebook: "eda-rulebook-alertmanager.yml"
 
-
-License
--------
+## License
 
 BSD
 
-Author Information
-------------------
+## Author Information
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
