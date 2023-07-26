@@ -83,16 +83,18 @@ Including an example of how to use your role (for instance, with variables passe
             eda_controller_url: "https://your-eda-controller-api.com"
             eda_controller_user: "your_eda_user"
             eda_controller_password: "your_eda_password"
-            eda_project:
-              name: "EDA Demo Project"
-              git_url: "https://github.com/kubealex/event-driven-automation"
-              description: "Demo project to show EDA in action"
+            eda_projects:
+              - name: "EDA Demo Project"
+                git_url: "https://github.com/kubealex/event-driven-automation"
+                description: "Demo project to show EDA in action"
             eda_decision_env:
-              name: "kubealex-eda"
-              image_url: "quay.io/kubealex/eda-decision-env"
+              - name: "kubealex-eda"
+                image_url: "quay.io/kubealex/eda-decision-env"
             eda_activations:
               - name: "eda-alertmanager"
                 rulebook: "eda-rulebook-alertmanager.yml"
+                project_name: "EDA Demo Project"
+                decision_env: "Automation Hub Default Decision Environment"
 
 ## License
 
