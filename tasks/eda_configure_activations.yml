@@ -1,5 +1,5 @@
 - name: EDA Controller | Configure activations
-  eda_activations:
+  kubealex.eda.eda_activations:
     controller_url: "{{ eda_controller_url }}"
     controller_user: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
