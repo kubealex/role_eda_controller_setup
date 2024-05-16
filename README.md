@@ -33,7 +33,7 @@ N/A
 | `eda_controller_url` | The URL of the EDA Controller API.                                           | ✔️        |         |
 | `eda_controller_user`| The username for authenticating with the EDA Controller API.                 | ✔️        |         |
 | `eda_controller_password` | The password for authenticating with the EDA Controller API.                 | ✔️        |         |
-| `eda_decision_env`   | Configuration for the Decision Environment.                                  | ✔️        |         |
+| `eda_decision_envs`   | Configuration for the Decision Environment.                                  | ✔️        |         |
 | `eda_denv_id` (set_fact variable) | The ID of the Decision Environment.                                    | ✔️        |         |
 
 ### Structure of `eda_decision_env`
