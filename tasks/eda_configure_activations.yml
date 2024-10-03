@@ -10,6 +10,7 @@
     decision_environment_name: "{{ item.decision_env }}"
     organization_name: "{{ item.organization | default('Default', true) }}"
     eda_credentials: "{{ item.credentials }}"
+    extra_vars: "{{ item.extra_vars }}"
     enabled: true
     state: present
   loop: "{{ eda_activations }}"
