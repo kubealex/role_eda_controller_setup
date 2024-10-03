@@ -1,9 +1,9 @@
 - block:
     - name: Create a new token using username/password
       ansible.controller.token:
-        controller_host: "{{ aap_controller_url }}"
-        controller_username: "{{ aap_controller_user }}"
-        controller_password: "{{ aap_controller_password }}"     
+        controller_host: "{{ aap2_controller_url }}"
+        controller_username: "{{ aap2_controller_user }}"
+        controller_password: "{{ aap2_controller_password }}"     
         description: 'AAP Controller Token'
         scope: "write"
         state: present
