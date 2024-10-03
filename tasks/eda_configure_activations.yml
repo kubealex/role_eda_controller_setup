@@ -11,4 +11,4 @@
     organization_name: "{{ item.organization | default('Default', true) }}"
     enabled: true
     state: present
-  loop: eda_activations
+  loop: "{{ eda_activations }}"
