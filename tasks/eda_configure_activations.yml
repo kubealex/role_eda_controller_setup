@@ -9,6 +9,7 @@
     rulebook_name: "{{ item.rulebook }}"
     decision_environment_name: "{{ item.decision_env }}"
     organization_name: "{{ item.organization | default('Default', true) }}"
+    eda_credentials: "{{ item.credentials }}"
     enabled: true
     state: present
   loop: "{{ eda_activations }}"
