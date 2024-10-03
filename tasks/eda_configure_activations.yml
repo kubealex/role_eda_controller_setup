@@ -1,6 +1,14 @@
-- name: EDA Controller | Configure activations
-  kubealex.eda.eda_activations:
+- name: Create a rulebook activation with event_streams option
+  ansible.eda.rulebook_activation:
     controller_host: "{{ eda_controller_url }}"
     controller_username: "{{ eda_controller_username }}"
     controller_password: "{{ eda_controller_password }}"
-    activations: "{{ eda_activations }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit, true) }}"
+    project_name: "{{ item.project_name }}"
+    rulebook_name: "{{ item.rulebook }}"
+    decision_environment_name: "{{ item.decision_env }}"
+    organization_name: "{{ item.organization | default('Default', true) }}"
+    enabled: true
+    state: present
+  loop: eda_activations
