@@ -13,7 +13,7 @@ N/A
 | Name                                 | Description                                                  | Mandatory | Defaults |
 | ------------------------------------ | ------------------------------------------------------------ | --------- | -------- |
 | `eda_controller_url`                 | The URL of the EDA Controller API.                           | ✔️        |          |
-| `eda_controller_user`                | The username for authenticating with the EDA Controller API. | ✔️        |          |
+| `eda_controller_username`                | The username for authenticating with the EDA Controller API. | ✔️        |          |
 | `eda_controller_password`            | The password for authenticating with the EDA Controller API. | ✔️        |          |
 | `eda_project`                        | Configuration for the EDA Project.                           | ✔️        |          |
 
@@ -30,7 +30,7 @@ N/A
 | Name                              | Description                                                  | Mandatory | Defaults |
 | --------------------------------- | ------------------------------------------------------------ | --------- | -------- |
 | `eda_controller_url`              | The URL of the EDA Controller API.                           | ✔️        |          |
-| `eda_controller_user`             | The username for authenticating with the EDA Controller API. | ✔️        |          |
+| `eda_controller_username`             | The username for authenticating with the EDA Controller API. | ✔️        |          |
 | `eda_controller_password`         | The password for authenticating with the EDA Controller API. | ✔️        |          |
 | `eda_decision_env`                | Configuration for the Decision Environment.                  | ✔️        |          |
 
@@ -46,7 +46,7 @@ N/A
 | Name                        | Description                                                  | Mandatory | Defaults |
 | --------------------------- | ------------------------------------------------------------ | --------- | -------- |
 | `eda_controller_url`        | The URL of the EDA Controller API.                           | ✔️        |          |
-| `eda_controller_user`       | The username for authenticating with the EDA Controller API. | ✔️        |          |
+| `eda_controller_username`       | The username for authenticating with the EDA Controller API. | ✔️        |          |
 | `eda_controller_password`   | The password for authenticating with the EDA Controller API. | ✔️        |          |
 | `eda_activations`           | List of activations to create for the given project.         | ✔️        |          |
 
@@ -81,7 +81,7 @@ Including an example of how to use your role (for instance, with variables passe
         - role: role_eda_controller_setup
           vars:
             eda_controller_url: "https://your-eda-controller-api.com"
-            eda_controller_user: "your_eda_user"
+            eda_controller_username: "your_eda_user"
             eda_controller_password: "your_eda_password"
             eda_projects:
               - name: "EDA Demo Project"

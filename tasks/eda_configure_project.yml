@@ -1,7 +1,7 @@
 - name: Create EDA Projects
   ansible.eda.project:
     controller_host: "{{ eda_controller_url }}"
-    controller_username: "{{ eda_controller_user }}"
+    controller_username: "{{ eda_controller_username }}"
     controller_password: "{{ eda_controller_password }}"
     name: "{{ item.name }}"
     url: "{{ item.git_url }}"

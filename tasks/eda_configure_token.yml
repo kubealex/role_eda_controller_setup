@@ -2,7 +2,7 @@
     - name: Create a new token using username/password
       ansible.controller.token:
         controller_host: "{{ aap2_controller_url }}"
-        controller_username: "{{ aap2_controller_user }}"
+        controller_username: "{{ aap2_controller_username }}"
         controller_password: "{{ aap2_controller_password }}"     
         description: 'AAP Controller Token'
         scope: "write"
@@ -11,7 +11,7 @@
     - name: Use our new token to make another call
       ansible.eda.controller_token:
         controller_host: "{{ eda_controller_url }}"
-        controller_username: "{{ eda_controller_user }}"
+        controller_username: "{{ eda_controller_username }}"
         controller_password: "{{ eda_controller_password }}"
         name: "AAP Controller Token"
         description: "AAP Controller Token"
