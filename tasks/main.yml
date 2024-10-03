@@ -2,7 +2,7 @@
 # tasks file for role_eda_controller_setup
 
 - name: EDA Controller | Import credential configuration tasks
-  when: eda_credentials is defined and eda_credentials | length > 0
+  when: eda_credentials_github is defined and eda_credentials_github | length > 0
   ansible.builtin.import_tasks:
     file: eda_configure_credentials.yml
 

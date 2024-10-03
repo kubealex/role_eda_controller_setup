@@ -1,6 +1,12 @@
-- name: EDA Controller | Configure decision environments
-  kubealex.eda.eda_decision_environment:
-    controller_url: "{{ eda_controller_url }}"
-    controller_user: "{{ eda_controller_user }}"
+- name: Create EDA Decision Environment
+  ansible.eda.decision_environment:
+    controller_host: "{{ eda_controller_url }}"
+    controller_username: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
-    decision_envs: "{{ eda_decision_envs }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    image_url: "{{ item.image_url }}"
+    credential: "{{ item.credential | default(omit, true) }}"
+    organization_name: "{{ item.organization | default('Default', true) }}"
+    state: present
+  loop: "{{ eda_decision_envs }}"

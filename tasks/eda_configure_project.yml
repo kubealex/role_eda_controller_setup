@@ -1,6 +1,13 @@
-- name: EDA Controller | Configure projects
-  kubealex.eda.eda_projects:
-    controller_url: "{{ eda_controller_url }}"
-    controller_user: "{{ eda_controller_user }}"
+- name: Create EDA Projects
+  ansible.eda.project:
+    controller_host: "{{ eda_controller_url }}"
+    controller_username: "{{ eda_controller_user }}"
     controller_password: "{{ eda_controller_password }}"
-    projects: "{{ eda_projects }}"
+    name: "{{ item.name }}"
+    url: "{{ item.git_url }}"
+    credential: "{{ item.credential }}"
+    organization_name: "{{ item.organization | default('Default', true) }}"
+    description: "{{ item.description }}"
+    state: present
+  loop: "{{ eda_projects }}"
+
