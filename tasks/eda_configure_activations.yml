@@ -11,6 +11,6 @@
     organization_name: "{{ item.organization | default('Default', true) }}"
     eda_credentials: "{{ item.credentials }}"
     extra_vars: "{{ item.extra_vars }}"
-    enabled: true
+    enabled: false
     state: present
   loop: "{{ eda_activations }}"
