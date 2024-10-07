@@ -5,9 +5,9 @@
     controller_password: "{{ eda_controller_password }}"
     name: "{{ item.name }}"
     url: "{{ item.git_url }}"
-    credential: "{{ item.credential }}"
+    credential: "{{ item.credential | default(omit, true) }}"
     organization_name: "{{ item.organization | default('Default', true) }}"
-    description: "{{ item.description }}"
+    description: "{{ item.description | default(omit, true) }}"
     state: present
   loop: "{{ eda_projects }}"
 

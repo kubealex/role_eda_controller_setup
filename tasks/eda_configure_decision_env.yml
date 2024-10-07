@@ -4,7 +4,7 @@
     controller_username: "{{ eda_controller_username }}"
     controller_password: "{{ eda_controller_password }}"
     name: "{{ item.name }}"
-    description: "{{ item.description }}"
+    description: "{{ item.description | default(omit, true) }}"
     image_url: "{{ item.image_url }}"
     credential: "{{ item.credential | default(omit, true) }}"
     organization_name: "{{ item.organization | default('Default', true) }}"
