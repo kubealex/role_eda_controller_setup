@@ -12,5 +12,6 @@
     eda_credentials: "{{ item.credentials }}"
     extra_vars: "{{ item.extra_vars | default(omit, true) }}"
     enabled: false
+    validate_certs: false
     state: present
   loop: "{{ eda_activations }}"

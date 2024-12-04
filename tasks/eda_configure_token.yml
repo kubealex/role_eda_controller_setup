@@ -3,7 +3,8 @@
       ansible.controller.token:
         controller_host: "{{ aap2_controller_url }}"
         controller_username: "{{ aap2_controller_username }}"
-        controller_password: "{{ aap2_controller_password }}"     
+        controller_password: "{{ aap2_controller_password }}"
+        validate_certs: false
         description: 'AAP Controller Token'
         scope: "write"
         state: present
@@ -13,6 +14,7 @@
         controller_host: "{{ eda_controller_url }}"
         controller_username: "{{ eda_controller_username }}"
         controller_password: "{{ eda_controller_password }}"
+        validate_certs: false
         name: "AAP Controller Token"
         description: "AAP Controller Token"
         token: "{{ controller_token }}"
