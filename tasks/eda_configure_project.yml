@@ -9,6 +9,7 @@
     credential: "{{ item.credential | default(omit, true) }}"
     organization_name: "{{ item.organization | default('Default', true) }}"
     description: "{{ item.description | default(omit, true) }}"
+    sync: true
     state: present
   loop: "{{ eda_projects }}"
 
